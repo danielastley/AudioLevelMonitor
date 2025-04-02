@@ -31,6 +31,13 @@
 *.out
 *.app
 
+# Build artifacts
+Builds/
+
+# macOS specific files
+.DS_Store
+*.swp # Often added to ignore vim swap files too
+
 # Xcode user-specific files
 *.xcuserstate
 xcuserdata/
