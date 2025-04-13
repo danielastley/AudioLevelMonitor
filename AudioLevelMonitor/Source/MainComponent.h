@@ -27,6 +27,12 @@ private:
     //==============================================================================
     // Your private member variables go here...
 
+    int quietestSoundSoFar;
+    int loudestSoundSoFar;
+    
+    // Nnew memory boxes for controlling output frequency
+    int blocksProcessedCounter;     // Counts how many blocks we've processed since last print
+    int outputIntervalInBlocks;     // How many blocks to wait before printing again
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
