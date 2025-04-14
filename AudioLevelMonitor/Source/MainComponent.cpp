@@ -7,19 +7,21 @@ MainComponent::MainComponent()
     // Make sure you set the size of the component after
     // you add any child components.
     setSize (800, 600);
+    
+    isInputActive = false;
+    
 
-    // Some platforms require permissions to open input channels so request that here
-    if (juce::RuntimePermissions::isRequired (juce::RuntimePermissions::recordAudio)
-        && ! juce::RuntimePermissions::isGranted (juce::RuntimePermissions::recordAudio))
-    {
-        juce::RuntimePermissions::request (juce::RuntimePermissions::recordAudio,
-                                           [&] (bool granted) { setAudioChannels (granted ? 2 : 0, 2); });
-    }
-    else
-    {
-        // Specify the number of input and output channels that we want to open
-        setAudioChannels (2, 2);
-    }
+    // --- TEMPORARY TEST ---
+       // juce::RuntimePermissions::request (juce::RuntimePermissions::recordAudio,
+       //                                   [&] (bool granted) {
+       //                                        DBG("Runtime permission callback executing.");
+       //                                        if (granted) { DBG("Permission GRANTED."); } else { DBG("Permission DENIED."); }
+       //                                        setAudioChannels (granted ? 2 : 0, 2);
+       //                                    });
+       DBG("!!! WARNING: Bypassing permission request - calling setAudioChannels(2, 2) directly for testing !!!");
+       setAudioChannels(2, 2); // Directly request inputs
+       // --- END OF TEMPORARY TEST ---
+ 
 }
 
 MainComponent::~MainComponent()
@@ -113,6 +115,13 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
         // 2. Convert the decimal sample [-1.0, +1.0] to a whole number [-32767, +32767]
         int wholeNumberSample = static_cast<int>(decimalSample * 32767.0f);
         
+        // --- TEMPORARY DEBUG: Print the first sample of each block ---
+        if (i == 0) // Only for the very first sample (index 0) in this block
+        {
+            DBG("First sample in block (int): "); DBG(wholeNumberSample);
+        }
+        // --- End of temporary debug ---
+        
         // 3. Check if this sample is the new quietest (using only if')
         if (wholeNumberSample < quietestSoundSoFar)
         {
@@ -138,13 +147,11 @@ void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& buffe
     {
         // --- Time to print! ---
         
-        // Calculate the simple integer range
-        int range = loudestSoundSoFar - loudestSoundSoFar; //Subtraction is usually okay
-        
         // Use DBG to print the results to the Xcode console
         DBG("--- Audio Metrics (Approx Every Second) ---");
         DBG("Min Int Sample: "); DBG(quietestSoundSoFar);
         DBG("Max Int Sample: "); DBG(loudestSoundSoFar);
+        int range = loudestSoundSoFar - loudestSoundSoFar;
         DBG("Int Range:      "); DBG(range);
         DBG("-------------------------------------------");
         

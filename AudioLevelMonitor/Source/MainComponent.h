@@ -1,6 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <atomic>
 
 //==============================================================================
 /*
@@ -33,6 +34,8 @@ private:
     // Nnew memory boxes for controlling output frequency
     int blocksProcessedCounter;     // Counts how many blocks we've processed since last print
     int outputIntervalInBlocks;     // How many blocks to wait before printing again
+    
+    std::atomic<bool> isInputActive;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
